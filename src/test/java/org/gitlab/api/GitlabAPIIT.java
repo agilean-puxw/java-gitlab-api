@@ -20,8 +20,9 @@ public class GitlabAPIIT {
 
     private static GitlabAPI api;
 
-    private static final String TEST_URL = "http://" + System.getProperty("docker.host.address", "localhost") +
-            ":" + System.getProperty("gitlab.port", "18080");
+//    private static final String TEST_URL = "http://" + System.getProperty("docker.host.address", "localhost") +
+//            ":" + System.getProperty("gitlab.port", "18080");
+    private static final String TEST_URL = "https://gitlab.com";
 
     @BeforeClass
     public static void getApi() {

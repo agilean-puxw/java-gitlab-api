@@ -2,6 +2,8 @@ package org.gitlab.api.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Objects;
+
 public class GitlabCommitDiff {
 
     public final static String URL = "/diff";
@@ -26,6 +28,9 @@ public class GitlabCommitDiff {
 
     @JsonProperty("renamed_file")
     private boolean renamedFile;
+
+    private int insertion = -1;
+    private int deletion = -1;
 
     @JsonProperty("deleted_file")
     private boolean deletedFile;
@@ -92,5 +97,37 @@ public class GitlabCommitDiff {
 
     public void setDeletedFile(boolean deletedFile) {
         this.deletedFile = deletedFile;
+    }
+
+    public int getInsertion() {
+        if (renamedFile) {
+            insertion = 0;
+            deletion = 0;
+            return insertion;
+        }
+        return doLatest();
+    }
+    private int doLatest() {
+        if (insertion == -1) {
+            insertion = 0;
+            deletion = 0;
+            if (diff != null && !"".equals(diff)) {
+                String[] lines = diff.split("\n");
+                for (String line : lines) {
+                    if (line.startsWith("+")) {
+                        insertion++;
+                    } else if (line.startsWith("-")) {
+                        deletion++;
+                    }
+                }
+            }
+        }
+        return insertion;
+    }
+    public int getDeletion() {
+        if (deletion == -1) {
+            getInsertion();
+        }
+        return deletion;
     }
 }
